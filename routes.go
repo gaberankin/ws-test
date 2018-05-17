@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -23,16 +22,12 @@ func wsRoute(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		pollDataMember := pollData.(queueMember)
-		mes, err := json.Marshal(pollDataMember)
-		if err != nil {
-			log.Printf("Unable to properly format poll data %v\n", pollDataMember)
-			break
-		}
 		if pollDataMember.Message == "stop" {
-			c.WriteMessage(websocket.CloseMessage, mes)
+			c.WriteJSON(pollDataMember)
+			c.WriteMessage(websocket.CloseMessage, []byte{})
 			break
 		}
-		err = c.WriteMessage(websocket.TextMessage, mes)
+		err = c.WriteJSON(pollDataMember)
 		if err != nil {
 			log.Println("write:", err)
 			break
