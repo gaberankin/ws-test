@@ -10,11 +10,6 @@ import (
 
 var upgrader = websocket.Upgrader{}
 
-type wsResponse struct {
-	Type    string      `json:"Type"`
-	Message interface{} `json:"Message"`
-}
-
 func wsRoute(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
